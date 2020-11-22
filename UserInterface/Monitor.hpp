@@ -1,7 +1,11 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-#define GLFW_INCLUDE_GLEXT
+#ifndef _DLL
+#define GLEW_STATIC
+#endif
+#include <GL/glew.h>
+//#define GLFW_INCLUDE_NONE
+//#define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #pragma comment(lib, "glfw3")
 

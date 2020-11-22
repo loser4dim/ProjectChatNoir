@@ -38,7 +38,7 @@ namespace loser_renderer{
 		GLShader& operator=(const GLShader&) = delete;
 		GLShader& operator=(GLShader&&) = delete;
 
-		~GLShader() = default;
+		~GLShader() noexcept;
 
 
 	private:

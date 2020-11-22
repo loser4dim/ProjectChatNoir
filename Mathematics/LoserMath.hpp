@@ -46,9 +46,25 @@ namespace loser_math{
 		output << "[" << x[0] << "\n" << x[1] << "\n" << x[2] << "\n" << x[3] << "\n" << "]";
 		return output;
 	}
+	inline std::ostream& operator<<(std::ostream& output, const Vector<std::float_t, 4>& x){
+		output << "(" << x[Axis::X] << ", " << x[Axis::Y] << ", " << x[Axis::Z] << ", " << x[Axis::W] << ")";
+		return output;
+	}
+	inline std::ostream& operator<<(std::ostream& output, const Matrix<std::float_t, 4, 4>& x){
+		output << "[" << x[0] << "\n" << x[1] << "\n" << x[2] << "\n" << x[3] << "\n" << "]";
+		return output;
+	}
 
 	inline constexpr const Vector3D cross(const Vector3D& a, const Vector3D& b) noexcept(false){
 		return Vector3D{
+			a[Axis::Y] * b[Axis::Z] - a[Axis::Z] * b[Axis::Y],
+			a[Axis::Z] * b[Axis::X] - a[Axis::X] * b[Axis::Z],
+			a[Axis::X] * b[Axis::Y] - a[Axis::Y] * b[Axis::X]
+		};
+	}
+
+	inline constexpr const Vector<std::float_t, 3> cross(const Vector<std::float_t, 3>& a, const Vector<std::float_t, 3>& b) noexcept(false){
+		return Vector<std::float_t, 3>{
 			a[Axis::Y] * b[Axis::Z] - a[Axis::Z] * b[Axis::Y],
 			a[Axis::Z] * b[Axis::X] - a[Axis::X] * b[Axis::Z],
 			a[Axis::X] * b[Axis::Y] - a[Axis::Y] * b[Axis::X]

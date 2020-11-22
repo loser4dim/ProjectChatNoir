@@ -185,6 +185,7 @@ namespace loser_math{
 
 	template<typename T = RealNumber, std::size_t N = 4>
 	inline constexpr T abs(const Vector<T, N>& x){
+		using std::sqrt;
 		return sqrt(dot(x, x));
 	}
 	template<typename T = RealNumber, std::size_t N = 4>

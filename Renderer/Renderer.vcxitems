@@ -16,6 +16,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)GLRenderer.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)GLShader.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Renderer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)GLRenderer.cpp" />

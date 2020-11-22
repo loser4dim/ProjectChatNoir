@@ -2,7 +2,7 @@
 #include "ShaderFileReader.hpp"
 #include <stdexcept>
 #ifdef _DEBUG
-#include <memory>
+#include <vector>
 #include <iostream>
 #endif
 
@@ -18,7 +18,6 @@ namespace loser_renderer{
 		const GLuint fragment_shader_object = glCreateShader(GL_FRAGMENT_SHADER);
 
 		std::string vertex_shader_source_code = loser_reader::readShaderFile(vertex_shader_file_path);
-		
 		if(vertex_shader_source_code.empty()){
 			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "Fail to Read Vertex Shader File."));
 		}
@@ -42,11 +41,18 @@ namespace loser_renderer{
 		glAttachShader(program_, vertex_shader_object);
 		glAttachShader(program_, fragment_shader_object);
 
+		glDeleteShader(vertex_shader_object);
+		glDeleteShader(fragment_shader_object);
+
 		if(!linkShader(program_)){
 			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "Fail to Link Shader."));
 		}
 	}
 
+
+	GLShader::~GLShader() noexcept{
+		glDeleteProgram(program_);
+	}
 
 	void GLShader::enableSource(const GLuint shader_object, const std::string& source_code) noexcept{
 		const GLchar*	code	= source_code.c_str();
@@ -87,25 +93,25 @@ namespace loser_renderer{
 		GLint log_length = 0;
 		glGetShaderiv(shader_object, GL_INFO_LOG_LENGTH, &log_length);
 
-		std::unique_ptr<GLchar[]> log = std::make_unique<GLchar[]>(static_cast<std::size_t>(log_length));
+		std::vector<GLchar> log(log_length);
 
-		glGetShaderInfoLog(shader_object, log_length - 1, &log_length, log.get());
-		std::cerr << log.get() << std::endl;
+		glGetShaderInfoLog(shader_object, log_length - 1, &log_length, log.data());
+		std::cerr << log.data() << std::endl;
 
-		log.release();
+		log.clear();
 
 		return;
 	}
 
-	void GLShader::reportLinkError(const GLuint prorgam) noexcept{
+	void GLShader::reportLinkError(const GLuint program) noexcept{
 		GLint log_length = 0;
-		glGetProgramiv(prorgam, GL_INFO_LOG_LENGTH, &log_length);
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_length);
 
-		std::unique_ptr<GLchar[]> log = std::make_unique<GLchar[]>(static_cast<std::size_t>(log_length));
-		glGetProgramInfoLog(prorgam, log_length - 1, &log_length, log.get());
-		std::cerr << log.get() << std::endl;
+		std::vector<GLchar> log(log_length);
+		glGetProgramInfoLog(program, log_length - 1, &log_length, log.data());
+		std::cerr << log.data() << std::endl;
 
-		log.release();
+		log.clear();
 
 		return;
 	}

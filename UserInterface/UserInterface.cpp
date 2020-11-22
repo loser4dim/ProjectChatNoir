@@ -7,25 +7,27 @@
 #endif
 
 namespace loser_ui{
-	void UserInteraface::callbackError(const int code, const char* const message) noexcept{
+	void UserInterface::callbackError(const int code, const char* const message) noexcept{
 #ifdef _DEBUG
 		std::string error(message);
+		//TODO: Have to Convert UTF-8 => Shift-Jis
 		std::cerr << "Error Code " << code << ": " << error << std::endl;
 #endif
 		return;
 	}
 
-
-	UserInteraface::UserInteraface(loser_scene::Scene* const scene_ref) noexcept(false){
+	UserInterface::UserInterface(loser_scene::Scene* const scene_ref) noexcept(false){
 #ifdef _DEBUG
-		UserInteraface::checkVersionGLFW();
+		UserInterface::checkVersionGLFW();
 #endif
-		UserInteraface::setupInitializeHint();
+		UserInterface::setupInitializeHint();
 
-		glfwSetErrorCallback(UserInteraface::callbackError);
+		glfwSetErrorCallback(UserInterface::callbackError);
+#ifdef _DEBUG
 		if(glfwInit() != GLFW_TRUE){
 			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "Fail to Initialize GLFW."));
 		}
+#endif
 
 		int monitor_num = 0;
 		GLFWmonitor* const* const new_monitors = glfwGetMonitors(&monitor_num);
@@ -41,49 +43,16 @@ namespace loser_ui{
 		//Now Vulkan is NOT Enable
 		//main_window_ = std::make_unique<Window>(primary.getWidth(), primary.getHeight(), primary.getRedBitDepth(), primary.getGreenBitDepth(), primary.getBlueBitDepth(), primary.getRefreshRate(), glfwCreateStandardCursor(GLFW_ARROW_CURSOR), scene_ref, vulkan_support);
 		main_window_ = std::make_unique<Window>(primary.getWidth(), primary.getHeight(), primary.getRedBitDepth(), primary.getGreenBitDepth(), primary.getBlueBitDepth(), primary.getRefreshRate(), glfwCreateStandardCursor(GLFW_ARROW_CURSOR), scene_ref);
-
 	}
 
-
-
-
-
-
-
-
-	/*UserInteraface UserInteraface::createInterface(quartet_scene::Scene& scene_ref) noexcept(false){
-#ifdef _DEBUG
-		UserInteraface::checkVersionGLFW();
-#endif
-		UserInteraface::setupInitializeHint();
-
-		glfwSetErrorCallback(UserInteraface::callbackError);
-
-		if(glfwInit() != GLFW_TRUE){
-			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "Fail to Initialize GLFW."));
-		}
-
+	UserInterface::~UserInterface() noexcept{
+		main_window_.release();
+		monitors_.clear();
+		glfwTerminate();
+	}
 
 #ifdef _DEBUG
-		int monitor_num = 0;
-		GLFWmonitor* const* const new_monitors = glfwGetMonitors(&monitor_num);
-		for(int i = 0; i < monitor_num; ++i){
-			Monitor::createInstance(new_monitors[i]);
-		}
-#endif
-
-		GLFWmonitor* const new_primary = glfwGetPrimaryMonitor();
-		if(new_primary == nullptr){
-			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "NOT Founded Primary Monitor."));
-		}
-
-		const bool vulkan_support = (glfwVulkanSupported() == GLFW_TRUE);
-		//Now Vulkan is NOT Enable
-		return UserInteraface(new_monitors, static_cast<std::size_t>(monitor_num), glfwCreateStandardCursor(GLFW_ARROW_CURSOR), scene_ref, false);
-	}*/
-
-#ifdef _DEBUG
-	void UserInteraface::checkVersionGLFW() noexcept{
+	void UserInterface::checkVersionGLFW() noexcept{
 		int glfw_major = 0;
 		int glfw_minor = 0;
 		int glfw_revision = 0;
@@ -93,12 +62,40 @@ namespace loser_ui{
 	}
 #endif
 
-	void UserInteraface::setupInitializeHint() noexcept{
+	void UserInterface::setupInitializeHint() noexcept{
 		glfwInitHint(GLFW_JOYSTICK_HAT_BUTTONS, GLFW_TRUE);
 #ifdef __APPLE__
 		glfwInitHint(GLFW_COCOA_CHDIR_RESOURCES, GLFW_FALSE);
 		glfwInitHint(GLFW_COCOA_MENUBAR, GLFW_FALSE);
 #endif
+		return;
+	}
+
+	void UserInterface::update() const noexcept{
+		if(main_window_ != nullptr){
+			main_window_->update();
+		}
+		return;
+	}
+
+	void UserInterface::createWidget() noexcept{
+		if(main_window_ != nullptr){
+			main_window_->createWidget();
+		}
+		return;
+	}
+
+	void UserInterface::addRendererReference(loser_renderer::GLRenderer* const renderer) noexcept{
+		if(main_window_ != nullptr){
+			main_window_->addRendererReference(renderer);
+		}
+		return;
+	}
+
+	void UserInterface::addWidget() noexcept{
+		if(main_window_ != nullptr){
+			main_window_->addWidget();
+		}
 		return;
 	}
 }

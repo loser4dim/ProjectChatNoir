@@ -132,7 +132,7 @@ namespace loser_math{
 		return (... * rest);
 	}
 
-	template<typename ...Args>
+
 	inline constexpr RealNumber sqrt(const RealNumber base) noexcept(false){
 		RealNumber root = base / 2.0;
 		RealNumber prev = 0.0;

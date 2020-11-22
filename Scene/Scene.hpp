@@ -28,20 +28,20 @@ namespace loser_scene{
 
 
 
-		void zoomCamera(const loser_math::RealNumber x) noexcept;
+		void zoomCamera(const std::float_t x) noexcept;
 
-		void moveCamera(const loser_math::RealNumber x, const loser_math::RealNumber y) noexcept;
-		void moveViewPointVertical(const loser_math::RealNumber y) noexcept;
-		void moveViewPointHorizontal(const loser_math::RealNumber x, const loser_math::RealNumber y) noexcept;
-		void computeProjectionMatrix(const loser_math::RealNumber width, const loser_math::RealNumber height) noexcept;
+		void moveCamera(const std::float_t x, const std::float_t y) noexcept;
+		void moveViewPointVertical(const std::float_t y) noexcept;
+		void moveViewPointHorizontal(const std::float_t x, const std::float_t y) noexcept;
+		void computeProjectionMatrix(const std::float_t width, const std::float_t height) noexcept;
 	private:
 
 
 	public:
-		inline const loser_math::RealNumber* const getProjectionMatrixData() const noexcept{
+		inline const std::float_t* const getProjectionMatrixData() const noexcept{
 			return main_camera_.getProjectionMatrixData();
 		}
-		inline const loser_math::RealNumber* const  getViewMatrixData() const noexcept{
+		inline const std::float_t* const  getViewMatrixData() const noexcept{
 			return main_camera_.getViewMatrixData();
 		}
 
@@ -49,6 +49,11 @@ namespace loser_scene{
 			return axes_.getData();
 		}
 
+
+		void update() noexcept{
+			main_camera_.update();
+			return;
+		}
 
 	};
 }

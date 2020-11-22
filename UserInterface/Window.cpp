@@ -22,8 +22,12 @@ namespace loser_ui{
 		if(current_window == nullptr){
 			return;
 		}
+
 		current_window->width_	= width;
 		current_window->height_ = height;
+
+		current_window->scene_->computeProjectionMatrix(width, height);
+
 		return;
 	}
 
@@ -37,8 +41,7 @@ namespace loser_ui{
 		}
 
 		current_window->renderer_->computeViewportMatrix(width, height);
-		current_window->scene_->computeProjectionMatrix(width, height);
-
+		
 		return;
 	}
 
@@ -50,9 +53,6 @@ namespace loser_ui{
 		if(current_window == nullptr){
 			return;
 		}
-#ifdef _DEBUG
-		std::clog << "Content Scale Resize: (" << scale_x << ", " << scale_y << ")" << std::endl;
-#endif
 		return;
 	}
 
@@ -64,9 +64,6 @@ namespace loser_ui{
 		if(current_window == nullptr){
 			return;
 		}
-#ifdef _DEBUG
-		std::clog << "Window Position: (" << pos_x << ", " << pos_y << ")" << std::endl;
-#endif
 		return;
 	}
 
@@ -91,6 +88,7 @@ namespace loser_ui{
 		}
 		return;
 	}
+
 	void Window::callbackFocus(GLFWwindow* const window, const int focused) noexcept{
 		if(window == nullptr){
 			return;
@@ -103,9 +101,18 @@ namespace loser_ui{
 	}
 
 	void Window::callbackRefresh(GLFWwindow* const window) noexcept{
-		if(window != nullptr){
-			glfwSwapBuffers(window);
+		if(window == nullptr){
+			return;
 		}
+		Window* const current_window = static_cast<Window* const>(glfwGetWindowUserPointer(window));
+		if(current_window == nullptr){
+			return;
+		}
+
+		
+		current_window->renderer_->clear();
+		glfwSwapBuffers(window);
+
 		return;
 	}
 
@@ -143,8 +150,8 @@ namespace loser_ui{
 			return;
 		}
 
-		const double diff_x = current_window->cursor_pos_x_old_ - pos_x;
-		const double diff_y = current_window->cursor_pos_y_old_ - pos_y;
+		const double diff_x = pos_x - current_window->cursor_pos_x_old_;
+		const double diff_y = pos_y - current_window->cursor_pos_y_old_;
 
 		current_window->cursor_pos_x_old_ = pos_x;
 		current_window->cursor_pos_y_old_ = pos_y;
@@ -256,6 +263,9 @@ namespace loser_ui{
 	Window::Window(const int w, const int h, const int r, const int g, const int b, const int fps, GLFWcursor* const cursor, loser_scene::Scene* const scene_ref, const bool vulkan_support) noexcept(false): cursor_(cursor), scene_(scene_ref){
 		setupWindowHint(r, g, b, fps, vulkan_support);
 
+		width_ = w;
+		height_ = h;
+
 		GLFWwindow* window = glfwCreateWindow(w * 3 / 4, h * 3 / 4, Window::TITLE_NAME_, nullptr, nullptr);
 		if(window == nullptr){
 			throw(std::runtime_error(std::string(__FILE__) + " | Line " + std::to_string(__LINE__) + "\n\t" + "Fail to Create GLFW Window."));
@@ -284,10 +294,9 @@ namespace loser_ui{
 		glfwSwapInterval(Window::SWAP_INTERVAL_);
 
 		fw_ptr_.reset(window);
-		glfwSetWindowUserPointer(fw_ptr_.get(), static_cast<void* const>(this));
-
-
+		glfwSetWindowUserPointer(fw_ptr_.get(), this);
 	}
+
 	void Window::setupWindowHint(const int red, const int green, const int blue, const int fps, const bool vulkan_support) noexcept{
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
@@ -409,10 +418,16 @@ namespace loser_ui{
 	}
 
 	void Window::update() const noexcept{
-		if(fw_ptr_ != nullptr && widgets_ != nullptr){
+		if(widgets_ != nullptr){
 			widgets_->display();
+		}
+
+		if(fw_ptr_ != nullptr){
 			glfwSwapBuffers(fw_ptr_.get());
 		}
+
+		glfwPollEvents();
+
 		return;
 	}
 
@@ -423,11 +438,13 @@ namespace loser_ui{
 		return;
 	}
 
-	void Window::addWidget(loser_renderer::GLRenderer* const renderer_ref){
-
+	void Window::addRendererReference(loser_renderer::GLRenderer* const renderer_ref) noexcept{
 		renderer_.reset(renderer_ref);
+		return;
+	}
 
-		//widgets_ = std::make_unique<Widget>(fw_ptr_.get(), scene_, renderer_);
+	void Window::addWidget() noexcept{
+		widgets_ = std::make_unique<Widget>(fw_ptr_.get(), scene_, renderer_);
 		return;
 	}
 }

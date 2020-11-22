@@ -16,6 +16,12 @@ namespace loser_renderer{
 
 	class GLRenderer final{
 	private:
+		static constexpr const char* const AXES_VERTEX_SHADER_PATH_ = "./Shader/Axes.vert";
+		static constexpr const char* const AXES_FRAGMENT_SHADER_PATH_ = "./Shader/Axes.frag";
+
+		static constexpr const char* const MODEL_VERTEX_SHADER_PATH_ = "./Shader/Model.vert";
+		static constexpr const char* const MODEL_FRAGMENT_SHADER_PATH_ = "./Shader/Model.frag";
+
 		//Hatsune Miku Color
 		static constexpr const GLclampf DEFAULT_BACKGROUND_RED_		= 57.0f / 255.0f;
 		static constexpr const GLclampf DEFAULT_BACKGROUND_GREEN_	= 197.0f / 255.0f;
@@ -24,14 +30,19 @@ namespace loser_renderer{
 
 		std::array<GLclampf, 4> background_color_;
 
-		GLint projection_matrix_location_ = 0;
-		GLint view_matrix_location_ = 0;
+		GLint axes_projection_matrix_location_ = -1;
+		GLint axes_view_matrix_location_ = -1;
 
+		GLint model_projection_matrix_location_ = -1;
+		GLint model_view_matrix_location_ = -1;
 
+		std::unique_ptr<GLShader> axes_shader_ = nullptr;
+
+		std::unique_ptr<GLShader> model_shader_ = nullptr;
 
 	public:
 		GLRenderer() noexcept(false);
-		explicit GLRenderer(const GLclampf r, const GLclampf g, const GLclampf b, const GLclampf a) noexcept(false);
+		explicit GLRenderer(const GLclampf red, const GLclampf green, const GLclampf blue, const GLclampf alpha) noexcept(false);
 
 		GLRenderer(const GLRenderer&)	= delete;
 		GLRenderer(GLRenderer&&)		= delete;
@@ -39,19 +50,18 @@ namespace loser_renderer{
 		GLRenderer& operator=(const GLRenderer&)	= delete;
 		GLRenderer& operator=(GLRenderer&&)			= delete;
 
-		~GLRenderer() = default;
+		~GLRenderer() noexcept;
 
-		std::unique_ptr<GLShader> axes_shader_ = nullptr;
 
 	public:
 		void clear() const noexcept;
-
+		void computeViewportMatrix(const GLint width, const GLint height) const noexcept;
 		
 		void drawAxes(const loser_scene::Scene& scene_ref) noexcept;
 
 
-
-		void computeViewportMatrix(const GLint width, const GLint height) const noexcept;
+		void drawTriangle(const loser_scene::Scene& scene_ref) noexcept;
+		
 
 
 	private:

@@ -5,30 +5,25 @@
 #include <vector>
 
 namespace loser_ui{
-	class UserInteraface final{
+	class UserInterface final{
 	private:
 		std::vector<Monitor> monitors_;
 		std::unique_ptr<Window> main_window_;
-
 
 	private:
 		static void callbackError(const int code, const char* const message) noexcept;
 
 	public:
-		UserInteraface() = delete;
-		UserInteraface(loser_scene::Scene* const scene_ref) noexcept(false);
+		UserInterface() = delete;
+		UserInterface(loser_scene::Scene* const scene_ref) noexcept(false);
 
-		UserInteraface(const UserInteraface&) = delete;
-		UserInteraface(UserInteraface&&) = delete;
+		UserInterface(const UserInterface&) = delete;
+		UserInterface(UserInterface&&) = delete;
 
-		UserInteraface& operator=(const UserInteraface&) = delete;
-		UserInteraface& operator=(UserInteraface&&) = delete;
+		UserInterface& operator=(const UserInterface&) = delete;
+		UserInterface& operator=(UserInterface&&) = delete;
 
-		~UserInteraface() noexcept(false){
-			main_window_.release();
-			monitors_.clear();
-			glfwTerminate();
-		}
+		~UserInterface() noexcept;
 
 	private:
 #ifdef _DEBUG
@@ -37,31 +32,24 @@ namespace loser_ui{
 		static void setupInitializeHint() noexcept;
 
 	public:
-		void createWidget() noexcept{
-			if(main_window_ != nullptr){
-				main_window_->createWidget();
-			}
-		}
+		void update() const noexcept;
+		void createWidget() noexcept;
 
-		void addWidget(loser_renderer::GLRenderer* const renderer){
-			if(main_window_ != nullptr){
-				main_window_->addWidget(renderer);
-			}
-		}
-
-		void update() const noexcept{
-			if(main_window_ != nullptr){
-				main_window_->update();
-			}
-			glfwPollEvents();
-			return;
-		}
+		void addRendererReference(loser_renderer::GLRenderer* const renderer) noexcept;
+		void addWidget() noexcept;
 
 		inline bool isEnable() const noexcept{
 			if(monitors_.empty() || main_window_ == nullptr){
 				return false;
 			}
 			return monitors_.front().isEnable() && main_window_->isEnable();
+		}
+
+		inline std::float_t getWindowWidth() const noexcept{
+			return main_window_->getWidth();
+		}
+		inline std::float_t getWindowHeight() const noexcept{
+			return main_window_->getHeight();
 		}
 	};
 }

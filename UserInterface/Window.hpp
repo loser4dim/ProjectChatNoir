@@ -69,17 +69,12 @@ namespace loser_ui{
 		Window() = delete;
 		Window(const int w, const int h, const int r, const int g, const int b, const int fps, GLFWcursor* const cursor, loser_scene::Scene* const scene_ref, const bool vulkan_support = false) noexcept(false);
 
-
-		/*Window(GLFWwindow* new_window, GLFWcursor* const new_cursor, quartet_scene::Scene* const scene_ref) noexcept: cursor_(new_cursor), fw_ptr_(new_window), scene_(scene_ref){
-			glfwSetWindowUserPointer(fw_ptr_.get(), static_cast<void* const>(this));
-		}*/
-
 		Window(const Window&) = delete;
 		Window(Window&&) = delete;
 
 		Window& operator=(const Window&) = delete;
 		Window& operator=(Window&&) = delete;
-	public:
+	
 		~Window() noexcept{
 
 			renderer_.reset();
@@ -99,14 +94,15 @@ namespace loser_ui{
 	public:
 		bool isEnable() const noexcept;
 		void update() const noexcept;
-
 		void createWidget() noexcept;
+		void addRendererReference(loser_renderer::GLRenderer* const renderer_ref) noexcept;
+		void addWidget() noexcept;
 
-		void addWidget(loser_renderer::GLRenderer* const renderer_ref);
+		inline int getWidth() const noexcept{
+			return width_;
+		}
+		inline int getHeight() const noexcept{
+			return height_;
+		}
 	};
-
-
-
-
-
 }

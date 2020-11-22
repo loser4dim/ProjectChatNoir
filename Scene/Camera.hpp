@@ -5,22 +5,22 @@
 namespace loser_scene{
 	class Camera final{
 	private:
-		static constexpr const loser_math::RealNumber RADIUS_MIN_ = 1.0;
-		static constexpr const loser_math::RealNumber RADIUS_MAX_ = 150.0;
+		static constexpr const std::float_t RADIUS_MIN_ = 0.1;
+		static constexpr const std::float_t RADIUS_MAX_ = 150.0;
 
 
 
-		loser_math::RealNumber radius_ = 10.0;
-		loser_math::RealNumber theta_ = loser_math::PI / 6.0;
-		loser_math::RealNumber phi_ = loser_math::PI / 3.0;
+		std::float_t radius_ = 20.0;
+		std::float_t theta_ = std::numbers::pi / 3.0;
+		std::float_t phi_ = std::numbers::pi / 3.0;
 
 
-		loser_math::Vector3D viewpoint_{0.0, 0.0, 0.0};
+		loser_math::Vector<std::float_t, 3> viewpoint_{0.0, 0.0, 0.0};
 
 		loser_math::Axis up_axis_ = loser_math::Axis::Z;
 
-		loser_math::Matrix4D projection_matrix_;
-		loser_math::Matrix4D view_matrix_;
+		loser_math::Matrix<std::float_t, 4, 4> projection_matrix_;
+		loser_math::Matrix<std::float_t, 4, 4> view_matrix_;
 
 	public:
 		Camera() noexcept;
@@ -38,22 +38,27 @@ namespace loser_scene{
 
 
 
-		void computeProjectionMatrix(const loser_math::RealNumber aspect) noexcept;
+		void computeProjectionMatrix(const std::float_t aspect) noexcept;
 
-		void zoom(const loser_math::RealNumber diff) noexcept;
+		void zoom(const std::float_t diff) noexcept;
 
-		void move(const loser_math::RealNumber x, const loser_math::RealNumber y) noexcept;
-
-
-		void moveViewPointVertical(const loser_math::RealNumber y) noexcept;
-		void moveViewPointHorizontal(const loser_math::RealNumber x, const loser_math::RealNumber y) noexcept;
+		void move(const std::float_t x, const std::float_t y) noexcept;
 
 
-		inline const loser_math::RealNumber* const getProjectionMatrixData() const noexcept{
+		void moveViewPointVertical(const std::float_t y) noexcept;
+		void moveViewPointHorizontal(const std::float_t x, const std::float_t y) noexcept;
+
+
+		inline const std::float_t* const getProjectionMatrixData() const noexcept{
 			return projection_matrix_.data()->data();
 		}
-		inline const loser_math::RealNumber* const  getViewMatrixData() const noexcept{
+		inline const std::float_t* const  getViewMatrixData() const noexcept{
 			return view_matrix_.data()->data();
+		}
+
+		void update() noexcept{
+			computeViewMatrix();
+			return;
 		}
 
 	private:
