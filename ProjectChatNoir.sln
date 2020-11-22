@@ -5,7 +5,29 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshModelViewer", "MeshModelViewer\MeshModelViewer.vcxproj", "{D9463F85-CA36-471C-A57A-00D374FCBA19}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UserInterface", "UserInterface\UserInterface.vcxitems", "{5089469A-6D01-4A99-9861-63AE71CF3453}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scene", "Scene\Scene.vcxitems", "{C765FE5B-AC16-4ACA-8EA3-1267E7FA2376}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "Renderer\Renderer.vcxitems", "{749F6256-C081-44D4-AB26-180E976750D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mathematics", "Mathematics\Mathematics.vcxitems", "{F3B99076-A4B4-4F42-AC1E-75164B9826DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileReader", "FileReader\FileReader.vcxitems", "{DA71C28A-1EFC-4CD7-8635-4E9AF2096941}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		UserInterface\UserInterface.vcxitems*{5089469a-6d01-4a99-9861-63ae71cf3453}*SharedItemsImports = 9
+		Renderer\Renderer.vcxitems*{749f6256-c081-44d4-ab26-180e976750d6}*SharedItemsImports = 9
+		Scene\Scene.vcxitems*{c765fe5b-ac16-4aca-8ea3-1267e7fa2376}*SharedItemsImports = 9
+		FileReader\FileReader.vcxitems*{d9463f85-ca36-471c-a57a-00d374fcba19}*SharedItemsImports = 4
+		Mathematics\Mathematics.vcxitems*{d9463f85-ca36-471c-a57a-00d374fcba19}*SharedItemsImports = 4
+		Renderer\Renderer.vcxitems*{d9463f85-ca36-471c-a57a-00d374fcba19}*SharedItemsImports = 4
+		Scene\Scene.vcxitems*{d9463f85-ca36-471c-a57a-00d374fcba19}*SharedItemsImports = 4
+		UserInterface\UserInterface.vcxitems*{d9463f85-ca36-471c-a57a-00d374fcba19}*SharedItemsImports = 4
+		FileReader\FileReader.vcxitems*{da71c28a-1efc-4cd7-8635-4e9af2096941}*SharedItemsImports = 9
+		Mathematics\Mathematics.vcxitems*{f3b99076-a4b4-4f42-ac1e-75164b9826db}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86

@@ -4,7 +4,7 @@
 
 
 
-
+#include "UserInterface.hpp"
 
 
 
@@ -24,9 +24,33 @@ int main(int argc, char** argv){
 int main(){
 #endif
 	try{
+		std::ios::sync_with_stdio(false);
+
+		loser_scene::Scene scene;
+
+		//Create Window Instance Before Creating Renderer Instance
+		//Because Initialization of GLEW Needs Window Context
+		loser_ui::UserInteraface ui(&scene);
+
+		loser_renderer::GLRenderer renderer(255.0, 255.0, 255.0, 255.0);
+
+		//Create Widget Instance After Creating Renderer Instance
+		//Because DearImGui Needs Initialization of GLEW
+		ui.addWidget(&renderer);
 
 
+		while(ui.isEnable()){
+			renderer.clear();
+			
+			//We must Create Widget Every Frame
+			ui.createWidget();
 
+
+			renderer.drawAxes(scene);
+
+
+			ui.update();
+		}
 	}
 	catch(const std::exception& error){
 		std::cerr << "Exception! : " << error.what() << std::endl;
